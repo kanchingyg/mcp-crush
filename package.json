@@ -1,0 +1,61 @@
+{
+  "name": "mcp-crush",
+  "version": "0.1.0",
+  "description": "MCP token auditor and stdio proxy that compresses tool schemas and prunes bloated JSON responses",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "mcp-crush": "./dist/cli.js"
+  },
+  "main": "./dist/bridge.js",
+  "exports": {
+    ".": {
+      "types": "./dist/bridge.d.ts",
+      "import": "./dist/bridge.js"
+    }
+  },
+  "types": "./dist/bridge.d.ts",
+  "files": [
+    "dist",
+    "SKILL.md",
+    "README.md",
+    "LICENSE",
+    "jsr.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && vitest run",
+    "prepublishOnly": "npm run build",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "publint": "^0.3.12",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  },
+  "author": "Augusto Cerrutti <augustocerruttisatto@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanchingyg/mcp-crush.git"
+  },
+  "mcpName": "io.github.kanchingyg/mcp-crush",
+  "homepage": "https://github.com/kanchingyg/mcp-crush#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "cli",
+    "typescript",
+    "compression",
+    "tokens",
+    "context-window",
+    "proxy",
+    "claude-code",
+    "cursor",
+    "llm"
+  ]
+}
