@@ -4,7 +4,8 @@
   "description": "MCP token auditor and stdio proxy that compresses tool schemas and prunes bloated JSON responses",
   "license": "MIT",
   "exports": {
-    ".": "./src/bridge.ts"
+    ".": "./src/bridge.ts",
+    "./bridge": "./src/bridge.ts"
   },
   "publish": {
     "include": [

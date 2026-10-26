@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/bridge.d.ts",
       "import": "./dist/bridge.js"
+    },
+    "./bridge": {
+      "types": "./dist/bridge.d.ts",
+      "import": "./dist/bridge.js"
     }
   },
   "types": "./dist/bridge.d.ts",

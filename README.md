@@ -6,10 +6,6 @@
 [![JSR Score](https://jsr.io/badges/@kanchingyg/mcp-crush/score)](https://jsr.io/@kanchingyg/mcp-crush/score)
 [![Runtime](https://img.shields.io/badge/runtime-Node_%7C_Bun_%7C_Deno-f9f1e1)](https://github.com/kanchingyg/mcp-crush)
 [![license](https://img.shields.io/github/license/kanchingyg/mcp-crush)](https://github.com/kanchingyg/mcp-crush/blob/HEAD/LICENSE)
-[![npm](https://img.shields.io/npm/v/mcp-crush)](https://www.npmjs.com/package/mcp-crush)
-[![JSR](https://jsr.io/badges/@kanchingyg/mcp-crush)](https://jsr.io/@kanchingyg/mcp-crush)
-[![Bun](https://img.shields.io/badge/runtime-Node_%7C_Bun-f9f1e1)](https://github.com/kanchingyg/mcp-crush)
-[![license](https://img.shields.io/github/license/kanchingyg/mcp-crush)](https://github.com/kanchingyg/mcp-crush/blob/HEAD/LICENSE)
 
 **One line:** `npx mcp-crush wrap -- <your-mcp-cmd>` (or `bunx mcp-crush wrap -- <your-mcp-cmd>`): stdio proxy that shrinks MCP tool catalogs and prunes oversized JSON responses by 60-85%.
 
@@ -60,16 +56,6 @@ npx mcp-crush --mcp
 
 Set `OLLAMA_HOST` (default `http://127.0.0.1:11434`). With `--mcp`, `mcp-crush` probes `n_ctx` and tunes truncation automatically. Use `--ollama-pack` on `wrap` to cap `tools/list` schemas around 600 tokens.
 
-## Production guards
-
-Built into `src/bridge.ts`:
-
-1. Read-only default, `--dry-run`, and loop breaker on repeated identical tool calls
-2. `n_ctx` probe + head/tail truncation + recency-friendly output budgets
-3. Embedding batch normalizer (empty string filter, MRL slice, L2 norm)
-4. MCP stdio stdout guard + Windows/WSL path normalization
-5. Reasoning-model quirks (`reasoning_content`, strip thinking blocks, omit `temperature` on reasoners)
-
 ## MCP Tools Reference
 
 | Tool | Mutates | Description |
@@ -108,11 +94,12 @@ import * as bridge from "jsr:@kanchingyg/mcp-crush/bridge";
 
 ## Runtime Safety and Guardrails
 
-- **Stdio frame isolation**: When `--mcp` is active, `hijackStdoutForMcp()` redirects accidental `console.log` calls to `stderr` so JSON-RPC 2.0 frames on `stdout` never corrupt.
-- **Read-only by default**: Mutating tools (`mutates: true`) are blocked in `--dry-run` mode and require explicit `--allow-write` authorization.
-- **Loop breaker**: Repeated identical `(toolName, args)` invocations are hashed with SHA-256 and halted after 3 consecutive repeats to prevent runaway agent loops.
-- **Context budget truncation**: Tool outputs are middle-truncated (`60%` head / `40%` tail) scaled to the probed local model `n_ctx` (Ollama `/api/show`, llama.cpp `/props`, vLLM `/v1/models`).
-- **Secret redaction and path normalization**: AWS keys (`AKIA*`, `ASIA*`), bearer tokens, and `sk-*` keys are scrubbed before returning tool output, and Windows drive paths (`C:\...`) translate cleanly to `/mnt/c/...` when WSL mode is enabled.
+- **Stdio frame isolation**: `--mcp` redirects stray `console.log` to `stderr` so JSON-RPC on `stdout` stays valid.
+- **Read-only default**: Mutating tools need `--allow-write`; `--dry-run` blocks writes.
+- **Loop breaker**: Identical tool calls halt after three repeats (SHA-256 of name + args).
+- **Context budget**: `wrap` / MCP probe `n_ctx` and head/tail-truncate large tool output.
+- **Config path sandbox**: `audit_mcp_config` resolves `configPath` under the process cwd.
+- **Secret redaction**: AWS keys, bearer tokens, and `sk-*` patterns scrubbed from tool text.
 
 ## License
 

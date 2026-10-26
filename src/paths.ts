@@ -1,8 +1,8 @@
-import { resolve, relative, sep } from "node:path";
+import { resolve, relative, sep, isAbsolute } from "node:path";
 
 export function assertPathContained(target: string, root: string): string {
   const absRoot = resolve(root);
-  const absTarget = resolve(absRoot, target);
+  const absTarget = isAbsolute(target) ? resolve(target) : resolve(absRoot, target);
   const rel = relative(absRoot, absTarget);
   if (rel.startsWith("..") || rel.includes(`${sep}..`)) {
     throw new Error(`Path outside sandbox root: ${target}`);

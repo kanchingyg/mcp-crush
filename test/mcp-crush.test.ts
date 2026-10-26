@@ -142,6 +142,12 @@ describe("paths", () => {
   it("rejects path traversal for config", () => {
     expect(() => assertPathContained("../../../etc/passwd", process.cwd())).toThrow(/outside sandbox/);
   });
+
+  it("rejects absolute paths outside sandbox root", () => {
+    expect(() => assertPathContained("C:\\Windows\\System32\\drivers\\etc\\hosts", process.cwd())).toThrow(
+      /outside sandbox/,
+    );
+  });
 });
 
 describe("bridge blindajes", () => {
