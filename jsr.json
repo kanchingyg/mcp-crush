@@ -1,0 +1,22 @@
+{
+  "name": "@kanchingyg/mcp-crush",
+  "version": "0.1.1",
+  "description": "MCP token auditor and stdio proxy that compresses tool schemas and prunes bloated JSON responses",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/bridge.ts"
+  },
+  "publish": {
+    "include": [
+      "src/**/*.ts",
+      "LICENSE",
+      "README.md",
+      "SKILL.md",
+      "jsr.json"
+    ],
+    "exclude": [
+      "src/**/*.test.ts",
+      "src/**/*.spec.ts"
+    ]
+  }
+}
